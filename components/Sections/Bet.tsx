@@ -1,16 +1,12 @@
 import { useAlert } from "@/context/AlertContext";
+import { useSession } from "@/context/SessionProvider";
+import { useTrading } from "@/context/TradingContext";
 import { useDerivWebsocket } from "@/hooks/useDerivWebSocket";
-import { useMessages } from "@/hooks/useMessages";
 import useUserInteraction from "@/hooks/useUserInteraction";
 import { useEffect, useRef, useState } from "react";
 
-export default function Bet(
-    {
-        activeAccount,
-        iosocket,
-        username
-    }: any) {
-
+export default function Bet() {
+    const { appId, activeAccount, wssocket, username} = useSession();
     const [isBetItemVisible, setIsBetItemVisible] = useState(true);
     const [isAutoBetVisible1, setIsAutoBetVisible1] = useState(false);
     const [isAutoCashoutInputEnabled, setIsAutoCashoutInputEnabled] = useState(false);
@@ -28,8 +24,6 @@ export default function Bet(
         token: activeAccount?.token,
         deriv_id: activeAccount?.derivId
     })
-
-    const wssocket = iosocket;
 
     const {
         account,
@@ -54,14 +48,8 @@ export default function Bet(
         RoundID,
         CashoutX,
         ErrorMessage,
-    } = useMessages({
-        messages,
-        socket,
-        wssocket,
-        appId: activeAccount?.derivId,
-        username: username
-    })
-
+    } = useTrading()
+    
     const multiplierRef = useRef(multiplier);
     const maxMultiplierRef = useRef(maxMultiplier)
     const flyAwayRef = useRef(isflyAway)
@@ -92,18 +80,18 @@ export default function Bet(
             setIsFlyAway(data.crashed)
         };
 
-        iosocket.on("round_id", handleRoundId);
-        iosocket.on("multiplier", handleMultiplier);
-        iosocket.on("maxMultiplier", handlemaxMultiplier);
-        iosocket.on("crashed", handleCrashed);
+        wssocket.on("round_id", handleRoundId);
+        wssocket.on("multiplier", handleMultiplier);
+        wssocket.on("maxMultiplier", handlemaxMultiplier);
+        wssocket.on("crashed", handleCrashed);
 
         return () => {
-            iosocket.off("round_id", handleRoundId)
-            iosocket.off("multiplier", handleMultiplier);
-            iosocket.off("maxMultiplier", handlemaxMultiplier);
-            iosocket.off("crashed", handleCrashed);
+            wssocket.off("round_id", handleRoundId)
+            wssocket.off("multiplier", handleMultiplier);
+            wssocket.off("maxMultiplier", handlemaxMultiplier);
+            wssocket.off("crashed", handleCrashed);
         };
-    }, [iosocket]);
+    }, [wssocket]);
 
     useEffect(() => {
         multiplierRef.current = multiplier;

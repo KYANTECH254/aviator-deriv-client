@@ -14,6 +14,7 @@ import GameCanvas from "@/components/Sections/GameCanvas";
 import { SessionProvider, useSession } from "@/context/SessionProvider";
 import Main from "@/components/LightWeightGameCanvas/Main";
 import { SettingsProvider } from "@/context/SettingsContext";
+import { TradingProvider } from "@/context/TradingContext";
 
 export default function Page() {
   return (
@@ -44,7 +45,10 @@ function Home() {
     handleActiveAccount,
     isChatVisible,
     connectionComplete,
-    cookieExists
+    cookieExists,
+    socket,
+    appId,
+    messages,
   } = useSession();
 
   if (loading) {
@@ -70,53 +74,51 @@ function Home() {
   return (
     <AlertProvider>
       <SettingsProvider>
-        <div id="main-content" className="aviator-container">
-          <div className={`aviator-header ${isChatVisible ? "shrink" : ""}`}>
-            <Header
-              account={account}
-              AllbetsData={AllbetsData}
-              username={username}
-              onToggleActiveAccount={handleActiveAccount}
-              activeAccount={activeAccount}
-              avatar={avatar}
-              onAvatarUpdate={handleAvatarUpdate}
-              onToggleChat={handleToggleChat}
-              isChatVisible={isChatVisible}
-            />
-          </div>
-
-          <main className={`aviator-objects ${isChatVisible ? "shrink" : ""}`}>
-            <AllBets
-              activeAccount={activeAccount}
-              AllbetsData={AllbetsData}
-              Multipliers={multipliers}
-              socket={wssocket}
-              LiveBetsData={LiveBetsData}
-              UpdatedBetData={UpdatedBetData}
-            />
-            <section className="aviator-betting-section" id="aviator-betting-section">
-              <RoundHistory multipliers={multipliers} />
-              {/* <GameCanvas socket={wssocket} /> */}
-              <Main />
-              <Bet
-                activeAccount={activeAccount}
-                iosocket={wssocket}
-                username={username}
-              />
-            </section>
-
-            {isChatVisible && (
-              <Chat
+        <TradingProvider messages={messages} socket={socket} wssocket={wssocket} appId={appId} username={username}>
+          <div id="main-content" className="aviator-container">
+            <div className={`aviator-header ${isChatVisible ? "shrink" : ""}`}>
+              <Header
+                account={account}
                 AllbetsData={AllbetsData}
-                onToggleChat={handleToggleChat}
-                activeAccount={activeAccount}
                 username={username}
-                socket={wssocket}
-                Multipliers={multipliers}
+                onToggleActiveAccount={handleActiveAccount}
+                activeAccount={activeAccount}
+                avatar={avatar}
+                onAvatarUpdate={handleAvatarUpdate}
+                onToggleChat={handleToggleChat}
+                isChatVisible={isChatVisible}
               />
-            )}
-          </main>
-        </div>
+            </div>
+
+            <main className={`aviator-objects ${isChatVisible ? "shrink" : ""}`}>
+              <AllBets
+                activeAccount={activeAccount}
+                AllbetsData={AllbetsData}
+                Multipliers={multipliers}
+                socket={wssocket}
+                LiveBetsData={LiveBetsData}
+                UpdatedBetData={UpdatedBetData}
+              />
+              <section className="aviator-betting-section" id="aviator-betting-section">
+                <RoundHistory multipliers={multipliers} />
+                {/* <GameCanvas socket={wssocket} /> */}
+                <Main />
+                <Bet />
+              </section>
+
+              {isChatVisible && (
+                <Chat
+                  AllbetsData={AllbetsData}
+                  onToggleChat={handleToggleChat}
+                  activeAccount={activeAccount}
+                  username={username}
+                  socket={wssocket}
+                  Multipliers={multipliers}
+                />
+              )}
+            </main>
+          </div>
+        </TradingProvider>
       </SettingsProvider>
     </AlertProvider>
   );

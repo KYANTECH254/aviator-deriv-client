@@ -4,11 +4,7 @@ import { useEffect, useState } from "react"
 
 export const useDerivWebsocket = ({
     token,
-    deriv_id,
-}: {
-    token: string
-    deriv_id: string
-}) => {
+    deriv_id, }: any) => {
     const [messages, setMessages] = useState()
     const [socket, setSocket] = useState<any>()
     const [ws_socket_errors, setWs_SocketErrors] = useState('')

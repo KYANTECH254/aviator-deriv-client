@@ -44,6 +44,8 @@ type SessionContextType = {
     isChatVisible: boolean;
     connectionComplete: boolean;
     cookieExists: number;
+    messages: any;
+    appId: any;
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -298,7 +300,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
                 handleActiveAccount,
                 isChatVisible,
                 connectionComplete,
-                cookieExists
+                cookieExists,
+                messages,
+                appId : activeAccount?.derivId,
             }}
         >
             {children}
