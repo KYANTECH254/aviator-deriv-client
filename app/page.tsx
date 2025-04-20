@@ -10,7 +10,6 @@ import Chat from "@/components/Sections/Chat";
 import RoundHistory from "@/components/Sections/RoundHistory";
 import { AlertProvider } from "@/context/AlertContext";
 import ErrorLoader from "@/components/ErrorLoader";
-import GameCanvas from "@/components/Sections/GameCanvas";
 import { SessionProvider, useSession } from "@/context/SessionProvider";
 import Main from "@/components/LightWeightGameCanvas/Main";
 import { SettingsProvider } from "@/context/SettingsContext";
