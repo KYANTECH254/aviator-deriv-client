@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react";
-import ChangeSeed from "./ChangeSeed";
 import ProvablyFair from "./ProvablyFair";
 
 export default function ProvablyFairSettings({ onClose }: any) {
@@ -121,7 +120,6 @@ export default function ProvablyFairSettings({ onClose }: any) {
                 </div>
             </div>
 
-            {isChangeSeedOpen && (<ChangeSeed onClose={handleChangeSeedToggle} />)}
             {isProvablyFairVisible && <ProvablyFair onClose={handleProvablyFairToggle} />}
         </>
     )
